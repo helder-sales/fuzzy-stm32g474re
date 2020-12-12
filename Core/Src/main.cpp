@@ -129,8 +129,6 @@ int main(void)
 			HAL_UART_Receive(&hlpuart1, &bufMagnitude[i], 1, 0xFFFFFFFF);
 		while(bufMagnitude[i++] != '\r' && i < 16);
 
-		uint32_t input1 = strtoul((const char *) bufMagnitude, NULL, 10);
-
 		HAL_UART_Transmit(&hlpuart1, (uint8_t *) "Insert gain: ", sizeof "\n\rInsert gain: ", 1000);
 
 		i = 0;
@@ -139,22 +137,32 @@ int main(void)
 			HAL_UART_Receive(&hlpuart1, &bufGain[i], 1, 0xFFFFFFFF);
 		while(bufGain[i++] != '\r' && i < 16);
 
+		// Uncomment for debug and comment above block until while(1)
+		//		uint8_t bufMagnitude[16] = "3500";
+		//		uint8_t bufGain[16] = "255";
+
+		uint32_t input1 = strtoul((const char *) bufMagnitude, NULL, 10);
 		uint32_t input2 = strtoul((const char *) bufGain, NULL, 10);
 
 		fuzzy->setInput(1, input1);
 		fuzzy->setInput(2, input2);
 
-		ITM->PORT[0].u8 = 0;
+		// Uncomment for debug
+		//		ITM->PORT[0].u8 = 0;
 
 		fuzzy->fuzzify();
 
-		ITM->PORT[0].u8 = 1;
-		ITM->PORT[1].u8 = 0;
+		// Uncomment for debug
+		//		ITM->PORT[0].u8 = 1;
+		//		ITM->PORT[1].u8 = 0;
 
 		float output1 = fuzzy->defuzzify(1);
 		float output2 = fuzzy->defuzzify(2);
 
-		ITM->PORT[1].u8 = 1;
+		// Uncomment for debug
+		//		ITM->PORT[1].u8 = 1;
+		// Uncomment for debug
+		//		asm volatile("nop");
 
 		char bufSpeedCtrl[16] = {0};
 		char bufGainCtrl[16] = {0};
