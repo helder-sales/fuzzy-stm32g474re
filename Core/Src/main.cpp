@@ -113,6 +113,13 @@ int main(void)
 	MX_LPUART1_UART_Init();
 	/* USER CODE BEGIN 2 */
 	HAL_UART_Transmit(&hlpuart1, (uint8_t *) "\033[2J\033[0;0H", sizeof "\033[2J\033[0;0H", 1000);
+
+	// Uncomment for debug
+	//	volatile uint32_t cycles1 = 0;
+	//	volatile uint32_t cycles2 = 0;
+	//	volatile float totalTime1 = 0;
+	//	volatile float totalTime2 = 0;
+	//	char bufTotalTime[16] = {0};
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -138,8 +145,8 @@ int main(void)
 		while(bufGain[i++] != '\r' && i < 16);
 
 		// Uncomment for debug and comment above block until while(1)
-		//		uint8_t bufMagnitude[16] = "3500";
-		//		uint8_t bufGain[16] = "255";
+		uint8_t bufMagnitude[16] = "4095";
+		uint8_t bufGain[16] = "1023";
 
 		uint32_t input1 = strtoul((const char *) bufMagnitude, NULL, 10);
 		uint32_t input2 = strtoul((const char *) bufGain, NULL, 10);
@@ -148,20 +155,31 @@ int main(void)
 		fuzzy->setInput(2, input2);
 
 		// Uncomment for debug
-		//		ITM->PORT[0].u8 = 0;
+		//		ITM->PORT[0].u32 = 0;
+		//		cycles1 = DWT->CYCCNT;
 
 		fuzzy->fuzzify();
 
 		// Uncomment for debug
-		//		ITM->PORT[0].u8 = 1;
-		//		ITM->PORT[1].u8 = 0;
+		//		cycles2 = DWT->CYCCNT;
+		//		ITM->PORT[0].u32 = 1;
+		//		totalTime1 = (cycles2 - cycles1) / 170e6f;
+		//		HAL_UART_Transmit(&hlpuart1, (uint8_t *) bufTotalTime,
+		//				snprintf(bufTotalTime, sizeof bufTotalTime, "%.3e\n\r", totalTime1), 1000);
+		//		cycles1 = DWT->CYCCNT;
+		//		ITM->PORT[0].u32 = 2;
 
 		float output1 = fuzzy->defuzzify(1);
 		float output2 = fuzzy->defuzzify(2);
 
 		// Uncomment for debug
-		//		ITM->PORT[1].u8 = 1;
-		// Uncomment for debug
+		//		cycles2 = DWT->CYCCNT;
+		//		ITM->PORT[0].u32 = 3;
+		//		totalTime2 = (cycles2 - cycles1) / 170e6f;
+		//		HAL_UART_Transmit(&hlpuart1, (uint8_t *) bufTotalTime,
+		//				snprintf(bufTotalTime, sizeof bufTotalTime, "%.3e\n\r", totalTime2), 1000);
+		//		HAL_UART_Transmit(&hlpuart1, (uint8_t *) bufTotalTime,
+		//				snprintf(bufTotalTime, sizeof bufTotalTime, "%.3e\n\r", totalTime1 + totalTime2), 1000);
 		//		asm volatile("nop");
 
 		char bufSpeedCtrl[16] = {0};
