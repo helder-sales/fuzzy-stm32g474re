@@ -145,8 +145,8 @@ int main(void)
 		while(bufGain[i++] != '\r' && i < 16);
 
 		// Uncomment for debug and comment above block until while(1)
-		uint8_t bufMagnitude[16] = "4095";
-		uint8_t bufGain[16] = "1023";
+		//		uint8_t bufMagnitude[16] = "4095";
+		//		uint8_t bufGain[16] = "1023";
 
 		uint32_t input1 = strtoul((const char *) bufMagnitude, NULL, 10);
 		uint32_t input2 = strtoul((const char *) bufGain, NULL, 10);
